@@ -19,7 +19,7 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  //check if this is okay?
+  // check if this is okay?
   rules: {
     "no-console": "warn",
     "no-underscore-dangle": ["error", { allow: ["_id"] }],
