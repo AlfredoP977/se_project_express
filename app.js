@@ -9,6 +9,7 @@ app.use((req, res, next) => {
   req.user = {
     _id: "683c5426396f7ba2205b3b6f", // paste the _id of the test user created in the previous step
   };
+  owner = req.user._id;
   next();
 });
 

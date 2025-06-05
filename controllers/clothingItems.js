@@ -12,7 +12,7 @@ const getItems = (req, res) => {
 
 // post user
 const createItem = (req, res) => {
-  const { name, weather, imageUrl, owner } = req.body;
+  const { name, weather, imageUrl } = req.body;
   ClothingItems.create({ name, weather, imageUrl, owner })
     .then((item) => res.status(201).send(item))
     .catch((err) => {
