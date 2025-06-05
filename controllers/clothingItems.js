@@ -1,6 +1,4 @@
 const ClothingItems = require("../models/clothingItems");
-const mongoose = require("mongoose");
-const clothingItem = require("../app");
 const { SOME_ERROR_CODE } = require("../utils/errors");
 
 // get Items
@@ -14,8 +12,8 @@ const getItems = (req, res) => {
 
 // post user
 const createItem = (req, res) => {
-  const { name, weather, imageUrl } = req.body;
-  ClothingItems.create({ name, weather, imageUrl })
+  const { name, weather, imageUrl, owner } = req.body;
+  ClothingItems.create({ name, weather, imageUrl, owner })
     .then((item) => res.status(201).send(item))
     .catch((err) => {
       SOME_ERROR_CODE(err, res);
@@ -24,8 +22,7 @@ const createItem = (req, res) => {
 
 const deleteItem = (req, res) => {
   console.log("id for delete item", req.params.itemId);
-  const deletedId = req.params.itemId;
-  ClothingItems.findById(req.params.itemId)
+  ClothingItems.findByIdAndDelete(req.params.itemId)
     .orFail(() => {
       const error = new Error("ItemIDNotFound");
       error.statusCode = 404;
@@ -76,28 +73,6 @@ const dislikeItem = (req, res) => {
       SOME_ERROR_CODE(err, res);
     });
 };
-const checkIfItemDeleted = async (req, res) => {
-  try {
-    const item = await ClothingItems.findById(req.params.itemId);
-
-    if (!item) {
-      return res.status(200).send(item);
-    }
-
-    await ClothingItems.findByIdAndDelete(req.params.itemId);
-
-    // Small delay to ensure database updates before checking
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const checkItem = await ClothingItems.findById(req.params.itemId);
-
-    return checkItem
-      ? res.status(500).send({ message: "Failed to delete item." })
-      : res.status(200).send({ message: "Item successfully deleted." });
-  } catch (err) {
-    SOME_ERROR_CODE(err, res);
-  }
-};
 
 module.exports = {
   getItems,
@@ -105,5 +80,4 @@ module.exports = {
   deleteItem,
   likeItem,
   dislikeItem,
-  checkIfItemDeleted,
 };

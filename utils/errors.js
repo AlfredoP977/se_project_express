@@ -1,23 +1,26 @@
+const BAD_REQUEST = 400;
+const NOT_FOUND = 404;
+const DEFAULT = 500;
+
 function SOME_ERROR_CODE(err, res) {
   console.error(err);
 
   console.log("name of Error:", err.name);
-  0;
-  if (err.statusCode === 404) {
-    return res.status(404).send({ message: "ItemIDNotFound" });
+  if (err.statusCode === NOT_FOUND) {
+    return res.status(NOT_FOUND).send({ message: "ItemIDNotFound" });
   }
   if (err.name === "ValidationError") {
-    return res.status(400).send({ message: err.message });
+    return res.status(BAD_REQUEST).send({ message: err.message });
   }
   if (err.name === "DocumentNotFoundError") {
-    return res.status(404).send({ message: err.message });
+    return res.status(NOT_FOUND).send({ message: err.message });
   }
   if (err.name === "CastError") {
-    return res.status(400).send({ message: err.message });
+    return res.status(BAD_REQUEST).send({ message: err.message });
   }
   if (err.name === "ItemIDNotFound") {
-    return res.status(404).send({ message: err.message });
+    return res.status(NOT_FOUND).send({ message: err.message });
   }
-  return res.status(500).send({ message: err.message });
+  return res.status(DEFAULT).send({ message: err.message });
 }
-module.exports = { SOME_ERROR_CODE };
+module.exports = { SOME_ERROR_CODE, BAD_REQUEST, NOT_FOUND, DEFAULT };

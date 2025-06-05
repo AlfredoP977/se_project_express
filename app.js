@@ -11,9 +11,7 @@ app.use((req, res, next) => {
   };
   next();
 });
-module.exports.ClothingItem = (req, res) => {
-  console.log(req.user._id); // _id will become accessible
-};
+
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
   .then(() => {

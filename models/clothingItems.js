@@ -13,7 +13,7 @@ const clothingItemSchema = new mongoose.Schema({
       message: "Link is not valid",
     },
   },
-  owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   likes: {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     default: [],
