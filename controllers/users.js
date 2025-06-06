@@ -18,6 +18,7 @@ const createUser = (req, res) => {
       SOME_ERROR_CODE(err, res);
     });
 };
+
 const getUser = (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
