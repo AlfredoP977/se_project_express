@@ -35,8 +35,6 @@ const deleteItem = (req, res) => {
 };
 
 const likeItem = (req, res) => {
-  console.log("req.params.itemId", req.params.itemId);
-  console.log("req.params", req.params);
   ClothingItems.findByIdAndUpdate(
     req.params.id,
     { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet

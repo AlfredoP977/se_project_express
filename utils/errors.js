@@ -3,9 +3,6 @@ const NOT_FOUND = 404;
 const DEFAULT = 500;
 
 function SOME_ERROR_CODE(err, res) {
-  console.error(err);
-
-  console.log("name of Error:", err.name);
   if (err.statusCode === NOT_FOUND) {
     return res.status(NOT_FOUND).send({ message: "ItemIDNotFound" });
   }
