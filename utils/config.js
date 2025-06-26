@@ -1,5 +1,1 @@
-const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
-  expiresIn: "7d",
-});
-
-module.exports = { token };
+module.exports.JWT_SECRET = "your-secret-key";

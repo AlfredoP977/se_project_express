@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 
+// model for users includes name, avatar,email,password to add to data base
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true, minlength: 2, maxlength: 30 },
   avatar: {
@@ -27,6 +28,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+//function to find user using email and password
 userSchema.statics.findUserByCredentials = function findUserByCredentials(
   email,
   password

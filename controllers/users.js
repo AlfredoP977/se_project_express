@@ -1,7 +1,12 @@
 const User = require("../models/user");
 const { SOME_ERROR_CODE } = require("../utils/errors");
+
+//why is bycrytpt not working
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+
+//import secret key from config.js
+const { JWT_SECRET } = require("../utils/config");
 
 // get /users
 const getUsers = (req, res) => {

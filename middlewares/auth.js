@@ -1,10 +1,8 @@
-const token = authorization.replace("Bearer ", "");
+//pulls jwt from jsonwebtoken libary to verify and decode JWTs
 const jwt = require("jsonwebtoken");
-const token = require("../utils/config");
 
-payload = jwt.verify(token, JWT_SECRET);
-req.user = payload;
-next();
+//Pulls in your secret key used to verify that the token was signed
+const { JWT_SECRET } = require("../utils/config");
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
