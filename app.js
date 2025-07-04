@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 //main hub to connect all routes
 const mainRouter = require("./routes/router");
 
+const { login, createUser } = require("./controllers/users");
+
 //dont know was following the lesson
 // const bodyParser = require("body-parser");
 
@@ -19,18 +21,12 @@ const app = express();
 //choosing default port out of 65,535
 const { PORT = 3001 } = process.env;
 
-// app.post("/signin", login);
-// app.post("/signup", createUser);
+app.use(express.json());
+
+app.post("/signin", login);
+app.post("/signup", createUser);
 
 //utilizing authentification
-app.use(auth);
-
-// app.use((req, res, next) => {
-//   req.user = {
-//     _id: "683c5426396f7ba2205b3b6f", // paste the _id of the test user created in the previous step
-//   };
-//   next();
-// });
 
 //connecting project to data base
 mongoose
@@ -40,10 +36,8 @@ mongoose
   })
   .catch(console.error);
 
-app.use(express.json());
-
 //connecting app to main router at rout.js
-app.use("/", auth, mainRouter);
+app.use("/", mainRouter);
 
 //using cors
 app.use(cors());

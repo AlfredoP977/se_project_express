@@ -16,36 +16,52 @@ const getUsers = (req, res) => {
       SOME_ERROR_CODE(err, res);
     });
 };
-const getUser = (req, res) => {
-  const { userId } = req.user;
-  User.findById(userId)
-    .orFail()
-    .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      SOME_ERROR_CODE(err, res);
-    });
-};
 
 // post user
 const createUser = (req, res) => {
-  bcrypt
-    .hash(req.body.password)
-    .then((hash) =>
-      User.create({
-        name: req.body.name,
-        avatar: req.body.avatar,
-        email: req.body.email,
-        password: hash,
+  console.log("Incoming request body:", req.body);
+
+  const { name, avatar, email, password } = req.body;
+
+  if (!name || !avatar || !email || !password) {
+    const err = "Missing required fields";
+    return SOME_ERROR_CODE(err, res);
+    // or res.status(400).json({ error: err.message });
+  } else {
+    return User.findOne({ email })
+      .then((existingUser) => {
+        if (existingUser) {
+          const err = new Error("Email already exists");
+          err.statusCode = 409;
+          throw err;
+        }
+        return bcrypt.hash(password, 10);
       })
-    )
-    .then((user) => res.status(201).send(user))
-    .catch((err) => {
-      SOME_ERROR_CODE(err, res);
-    });
+      .then((hash) => {
+        return User.create({
+          name,
+          avatar,
+          email,
+          password: hash,
+        });
+      })
+      .then((user) => {
+        const { password, ...userWithoutPassword } = user.toObject();
+        res.status(201).send(userWithoutPassword);
+      })
+      .catch((err) => {
+        console.log("err", err);
+        SOME_ERROR_CODE(err, res);
+      });
+  }
 };
 
 const login = (req, res) => {
   const { email, password } = req.body;
+  if (!email || !password) {
+    const err = "missing email or password";
+    return SOME_ERROR_CODE(err, res);
+  }
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -53,12 +69,23 @@ const login = (req, res) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-      res.send({ token });
+      res.status(200).send({ token });
     })
     .catch((err) => {
       // authentication error
+      console.log(" message: err.message", err.message);
+      console.log(" message: err.name", err.name);
       res.status(401).send({ message: err.message });
     });
 };
 
-module.exports = { getUsers, createUser, getUser, login };
+const getCurrentUser = (req, res) => {
+  console.log("id?", req.user._id);
+  User.findById(req.user._id)
+    .orFail()
+    .then((user) => res.status(200).send(user))
+    .catch((err) => {
+      SOME_ERROR_CODE(err, res);
+    });
+};
+module.exports = { getUsers, createUser, getCurrentUser, login };

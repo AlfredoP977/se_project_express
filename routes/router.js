@@ -7,7 +7,9 @@ const userRouter = require("./users");
 //connects to item router
 const clothingItemsRouter = require("./clothingItems");
 
-router.use("/users", userRouter);
+const auth = require("../middlewares/auth");
+
+router.use("/users", auth, userRouter);
 router.use("/items", clothingItemsRouter);
 
 //reports errors

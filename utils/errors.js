@@ -2,12 +2,24 @@ const BAD_REQUEST = 400;
 const NOT_FOUND = 404;
 const DEFAULT = 500;
 const CONFLICT = 409;
+const authenticationError = 401;
 
 function SOME_ERROR_CODE(err, res) {
   if (err.statusCode === NOT_FOUND) {
     return res.status(NOT_FOUND).send({ message: "ItemIDNotFound" });
   }
   if (err.name === "ValidationError") {
+    return res.status(BAD_REQUEST).send({ message: err.message });
+  }
+  if (err === "Missing required fields") {
+    return res.status(BAD_REQUEST).send({ message: "Missing required fields" });
+  }
+  if (err === "missing email or password") {
+    return res
+      .status(BAD_REQUEST)
+      .send({ message: "missing email or password" });
+  }
+  if (err.name === "Missing required fields") {
     return res.status(BAD_REQUEST).send({ message: err.message });
   }
   if (err.name === "DocumentNotFoundError") {
@@ -19,9 +31,13 @@ function SOME_ERROR_CODE(err, res) {
   if (err.name === "ItemIDNotFound") {
     return res.status(NOT_FOUND).send({ message: err.message });
   }
-  if (err.name === 11000) {
-    return res.status(CONFLICT).send({ message: err.message });
+  if (err.statusCode === CONFLICT) {
+    return res.status(CONFLICT).send({ message: "Email already exists" });
   }
+  if (err.name === "ReferenceError") {
+    return res.status(BAD_REQUEST).send({ message: err.message });
+  }
+
   return res.status(DEFAULT).send({ message: err.message });
 }
 module.exports = { SOME_ERROR_CODE, BAD_REQUEST, NOT_FOUND, DEFAULT };
