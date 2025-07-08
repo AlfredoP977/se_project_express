@@ -50,14 +50,14 @@ const createUser = (req, res) => {
       }
       return bcrypt.hash(password, 10);
     })
-    .then((hash) => {
-      return User.create({
+    .then((hash) =>
+      User.create({
         name,
         avatar,
         email,
         password: hash,
-      });
-    })
+      })
+    )
     .then((user) => {
       // password is already declared fix this
       const { password: _, ...userWithoutPassword } = user.toObject();
