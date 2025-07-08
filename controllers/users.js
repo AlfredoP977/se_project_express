@@ -1,11 +1,10 @@
-const User = require("../models/user");
-const { SOME_ERROR_CODE } = require("../utils/errors");
-
-//why is bycrytpt not working
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-//import secret key from config.js
+const User = require("../models/user");
+const { SOME_ERROR_CODE } = require("../utils/errors");
+
+// import secret key from config.js
 const { JWT_SECRET } = require("../utils/config");
 
 // post user
@@ -17,33 +16,33 @@ const createUser = (req, res) => {
   if (!name || !avatar || !email || !password) {
     const err = "Missing required fields";
     return SOME_ERROR_CODE(err, res);
-  } else {
-    return User.findOne({ email })
-      .then((existingUser) => {
-        if (existingUser) {
-          const err = new Error("Email already exists");
-          err.statusCode = 409;
-          throw err;
-        }
-        return bcrypt.hash(password, 10);
-      })
-      .then((hash) => {
-        return User.create({
-          name,
-          avatar,
-          email,
-          password: hash,
-        });
-      })
-      .then((user) => {
-        const { password, ...userWithoutPassword } = user.toObject();
-        res.status(201).send(userWithoutPassword);
-      })
-      .catch((err) => {
-        console.log("err", err);
-        SOME_ERROR_CODE(err, res);
-      });
   }
+  return User.findOne({ email })
+    .then((existingUser) => {
+      if (existingUser) {
+        const err = new Error("Email already exists");
+        err.statusCode = 409;
+        throw err;
+      }
+      return bcrypt.hash(password, 10);
+    })
+    .then((hash) => {
+      return User.create({
+        name,
+        avatar,
+        email,
+        password: hash,
+      });
+    })
+    .then((user) => {
+      // password is already declared fix this
+      const { password, ...userWithoutPassword } = user.toObject();
+      res.status(201).send(userWithoutPassword);
+    })
+    .catch((err) => {
+      console.log("err", err);
+      SOME_ERROR_CODE(err, res);
+    });
 };
 
 const login = (req, res) => {
@@ -78,4 +77,4 @@ const getCurrentUser = (req, res) => {
       SOME_ERROR_CODE(err, res);
     });
 };
-module.exports = { getUsers, createUser, getCurrentUser, login };
+module.exports = { createUser, getCurrentUser, login };

@@ -1,22 +1,21 @@
-//express is used for routing
+//  express is used for routing
 const express = require("express");
-//programs for the database
+//  programs for the database
 const mongoose = require("mongoose");
-//main hub to connect all routes
+//  not sure what this does "allow requests from the client to the server to be processed"
+const cors = require("cors");
+//  main hub to connect all routes
 const mainRouter = require("./routes/router");
 
 const { login, createUser } = require("./controllers/users");
 
-//not sure what this does "allow requests from the client to the server to be processed"
-const cors = require("cors");
-
-//using express
+//  using express
 const app = express();
 
 // Enable cross-origin resource sharing for client-server communication
 app.use(cors());
 
-//choosing default port out of 65,535
+//  choosing default port out of 65,535
 const { PORT = 3001 } = process.env;
 
 app.use(express.json());
@@ -24,9 +23,9 @@ app.use(express.json());
 app.post("/signin", login);
 app.post("/signup", createUser);
 
-//utilizing authentification
+//  utilizing authentification
 
-//connecting project to data base
+//  connecting project to data base
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
   .then(() => {
@@ -34,10 +33,10 @@ mongoose
   })
   .catch(console.error);
 
-//connecting app to main router at rout.js
+//  connecting app to main router at rout.js
 app.use("/", mainRouter);
 
-//checking what port is being used
+//  checking what port is being used
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
 });
