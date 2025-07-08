@@ -7,17 +7,15 @@ const mainRouter = require("./routes/router");
 
 const { login, createUser } = require("./controllers/users");
 
-//dont know was following the lesson
-// const bodyParser = require("body-parser");
-
 //not sure what this does "allow requests from the client to the server to be processed"
 const cors = require("cors");
 
-// const { createUser, login } = require("./controllers/users");
-const auth = require("./middlewares/auth");
-
 //using express
 const app = express();
+
+// Enable cross-origin resource sharing for client-server communication
+app.use(cors());
+
 //choosing default port out of 65,535
 const { PORT = 3001 } = process.env;
 
@@ -38,9 +36,6 @@ mongoose
 
 //connecting app to main router at rout.js
 app.use("/", mainRouter);
-
-//using cors
-app.use(cors());
 
 //checking what port is being used
 app.listen(PORT, () => {

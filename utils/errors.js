@@ -2,7 +2,7 @@ const BAD_REQUEST = 400;
 const NOT_FOUND = 404;
 const DEFAULT = 500;
 const CONFLICT = 409;
-const authenticationError = 401;
+const "UNAUTHORIZED = 401;
 
 function SOME_ERROR_CODE(err, res) {
   if (err.statusCode === NOT_FOUND) {
@@ -40,4 +40,4 @@ function SOME_ERROR_CODE(err, res) {
 
   return res.status(DEFAULT).send({ message: err.message });
 }
-module.exports = { SOME_ERROR_CODE, BAD_REQUEST, NOT_FOUND, DEFAULT };
+module.exports = { SOME_ERROR_CODE, BAD_REQUEST, NOT_FOUND, DEFAULT,UNAUTHORIZED };

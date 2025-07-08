@@ -19,7 +19,7 @@ const getItems = (req, res) => {
 // post user
 const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
-  const owner = req.user._id;
+  const owner = req.user;
   ClothingItems.create({ name, weather, imageUrl, owner })
     .then((item) => res.status(201).send(item))
     .catch((err) => {
@@ -37,6 +37,7 @@ const deleteItem = (req, res) => {
     })
     .then((item) => res.status(200).send(item))
     .catch((err) => {
+      console.error(err);
       SOME_ERROR_CODE(err, res);
     });
 };

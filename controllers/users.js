@@ -8,15 +8,6 @@ const jwt = require("jsonwebtoken");
 //import secret key from config.js
 const { JWT_SECRET } = require("../utils/config");
 
-// get /users
-const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => res.status(200).send(users))
-    .catch((err) => {
-      SOME_ERROR_CODE(err, res);
-    });
-};
-
 // post user
 const createUser = (req, res) => {
   console.log("Incoming request body:", req.body);
@@ -26,7 +17,6 @@ const createUser = (req, res) => {
   if (!name || !avatar || !email || !password) {
     const err = "Missing required fields";
     return SOME_ERROR_CODE(err, res);
-    // or res.status(400).json({ error: err.message });
   } else {
     return User.findOne({ email })
       .then((existingUser) => {
