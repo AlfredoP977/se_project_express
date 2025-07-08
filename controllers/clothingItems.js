@@ -10,10 +10,10 @@ const getItems = (req, res) => {
     });
 };
 
-// post user
+// post item
 const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
-  const owner = req.user;
+  const owner = req.user._id;
   ClothingItems.create({ name, weather, imageUrl, owner })
     .then((item) => res.status(201).send(item))
     .catch((err) => {

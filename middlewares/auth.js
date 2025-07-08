@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 // Pulls in your secret key used to verify that the token was signed
 const { JWT_SECRET } = require("../utils/config");
 
-const UNAUTHORIZED = require("../utils/errors");
+const { UNAUTHORIZED } = require("../utils/errors");
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
