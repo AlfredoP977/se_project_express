@@ -7,10 +7,34 @@ const { SOME_ERROR_CODE } = require("../utils/errors");
 // import secret key from config.js
 const { JWT_SECRET } = require("../utils/config");
 
+// update user
+const updateUser = (req, res) => {
+  const { name, avatar } = req.body;
+
+  const updateData = {};
+  if (name !== undefined) updateData.name = name;
+  if (avatar !== undefined) updateData.avatar = avatar;
+
+  User.findByIdAndUpdate(
+    req.user._id,
+    { $set: updateData },
+    { new: true, runValidators: true }
+  )
+    .orFail(() => {
+      const err = new Error("ItemIDNotFound");
+      err.statusCode = 404;
+      throw err;
+    })
+    .then((item) => {
+      res.status(200).send(item);
+    })
+    .catch((err) => {
+      SOME_ERROR_CODE(err, res);
+    });
+};
+
 // post user
 const createUser = (req, res) => {
-  console.log("Incoming request body:", req.body);
-
   const { name, avatar, email, password } = req.body;
 
   if (!name || !avatar || !email || !password) {
@@ -36,11 +60,10 @@ const createUser = (req, res) => {
     })
     .then((user) => {
       // password is already declared fix this
-      const { password, ...userWithoutPassword } = user.toObject();
+      const { password: _, ...userWithoutPassword } = user.toObject();
       res.status(201).send(userWithoutPassword);
     })
     .catch((err) => {
-      console.log("err", err);
       SOME_ERROR_CODE(err, res);
     });
 };
@@ -62,14 +85,11 @@ const login = (req, res) => {
     })
     .catch((err) => {
       // authentication error
-      console.log(" message: err.message", err.message);
-      console.log(" message: err.name", err.name);
       res.status(401).send({ message: err.message });
     });
 };
 
 const getCurrentUser = (req, res) => {
-  console.log("id?", req.user._id);
   User.findById(req.user._id)
     .orFail()
     .then((user) => res.status(200).send(user))
@@ -77,4 +97,4 @@ const getCurrentUser = (req, res) => {
       SOME_ERROR_CODE(err, res);
     });
 };
-module.exports = { createUser, getCurrentUser, login };
+module.exports = { createUser, getCurrentUser, login, updateUser };

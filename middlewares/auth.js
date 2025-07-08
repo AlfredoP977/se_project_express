@@ -8,7 +8,6 @@ const { UNAUTHORIZED } = require("../utils/errors");
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
-  console.log("authorization", authorization);
   if (!authorization || !authorization.startsWith("Bearer ")) {
     return res.status(UNAUTHORIZED).send({ message: "Authorization Required" });
   }
@@ -24,5 +23,5 @@ module.exports = (req, res, next) => {
 
   req.user = payload; // assigning the payload to the request object
 
-  next(); // sending the request to the next middleware
+  return next(); // sending the request to the next middleware
 };

@@ -15,23 +15,30 @@ const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
   ClothingItems.create({ name, weather, imageUrl, owner })
-    .then((item) => res.status(201).send(item))
+    .then((item) => {
+      res.status(201).send(item);
+    })
     .catch((err) => {
       SOME_ERROR_CODE(err, res);
     });
 };
 
 const deleteItem = (req, res) => {
-  console.log("id for delete item", req.params.itemId);
-  ClothingItems.findByIdAndDelete(req.params.itemId)
+  ClothingItems.findById(req.params.itemId)
     .orFail(() => {
       const error = new Error("ItemIDNotFound");
       error.statusCode = 404;
       throw error;
     })
-    .then((item) => res.status(200).send(item))
+    .then((item) => {
+      if (String(item.owner) !== req.user._id) {
+        const error = new Error("DeletedAnotherUserItem");
+        error.statusCode = 403;
+        throw error;
+      }
+      return item.deleteOne().then(() => res.status(200).send(item));
+    })
     .catch((err) => {
-      console.error(err);
       SOME_ERROR_CODE(err, res);
     });
 };

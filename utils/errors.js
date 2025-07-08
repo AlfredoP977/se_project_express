@@ -3,8 +3,12 @@ const NOT_FOUND = 404;
 const DEFAULT = 500;
 const CONFLICT = 409;
 const UNAUTHORIZED = 401;
+const FORBiDDEN = 403;
 
 function SOME_ERROR_CODE(err, res) {
+  if (err.statusCode === FORBiDDEN) {
+    return res.status(FORBiDDEN).send({ message: "DeletedAnotherUserItem" });
+  }
   if (err.statusCode === NOT_FOUND) {
     return res.status(NOT_FOUND).send({ message: "ItemIDNotFound" });
   }
@@ -46,4 +50,5 @@ module.exports = {
   NOT_FOUND,
   DEFAULT,
   UNAUTHORIZED,
+  FORBiDDEN,
 };
