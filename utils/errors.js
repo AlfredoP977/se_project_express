@@ -6,6 +6,9 @@ const UNAUTHORIZED = 401;
 const FORBiDDEN = 403;
 
 function SOME_ERROR_CODE(err, res) {
+  if (err.message === "Incorrect email or password") {
+    return res.status(UNAUTHORIZED).send({ message: err.message });
+  }
   if (err.statusCode === FORBiDDEN) {
     return res.status(FORBiDDEN).send({ message: "DeletedAnotherUserItem" });
   }

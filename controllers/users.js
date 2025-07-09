@@ -59,7 +59,6 @@ const createUser = (req, res) => {
       })
     )
     .then((user) => {
-      // password is already declared fix this
       const { password: _, ...userWithoutPassword } = user.toObject();
       res.status(201).send(userWithoutPassword);
     })
@@ -85,7 +84,7 @@ const login = (req, res) => {
     })
     .catch((err) => {
       // authentication error
-      res.status(401).send({ message: err.message });
+      SOME_ERROR_CODE(err, res);
     });
 };
 
