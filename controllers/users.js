@@ -10,11 +10,12 @@ const { JWT_SECRET } = require("../utils/config");
 // update user
 const updateUser = (req, res) => {
   const { name, avatar } = req.body;
-
   const updateData = {};
   if (name !== undefined) updateData.name = name;
   if (avatar !== undefined) updateData.avatar = avatar;
-
+  console.log("About to update user with ID:", req.user._id);
+  console.log("Update data being sent:", updateData);
+  console.log("updateData:", updateData);
   User.findByIdAndUpdate(
     req.user._id,
     { $set: updateData },
@@ -26,9 +27,11 @@ const updateUser = (req, res) => {
       throw err;
     })
     .then((item) => {
+      console.log("Updated user:", item);
       res.status(200).send(item);
     })
     .catch((err) => {
+      console.log("Update error:", err);
       SOME_ERROR_CODE(err, res);
     });
 };
