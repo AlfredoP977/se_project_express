@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 //  not sure what this does "allow requests from the client to the server to be processed"
 const cors = require("cors");
 //  main hub to connect all routes
-const mainRouter = require("./routes/router");
+const mainRouter = require("./routes");
 
 const { login, createUser } = require("./controllers/users");
 
