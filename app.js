@@ -49,6 +49,6 @@ app.use(errors());
 app.use(errorHandler);
 
 //  checking what port is being used
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Listening on port ${PORT}`);
 });
