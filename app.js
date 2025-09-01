@@ -8,6 +8,12 @@ const cors = require("cors");
 const mainRouter = require("./routes");
 
 const { login, createUser } = require("./controllers/users");
+//errorHandler
+const { errorHandler } = require("./middlewares/error-handler.js");
+
+const { errors } = require("celebrate");
+
+const { requestLogger, errorLogger } = require("./middlewares/logger");
 
 //  using express
 const app = express();
@@ -19,6 +25,7 @@ app.use(cors());
 const { PORT = 3001 } = process.env;
 
 app.use(express.json());
+app.use(requestLogger);
 
 app.post("/signin", login);
 app.post("/signup", createUser);
@@ -32,9 +39,14 @@ mongoose
     console.log("connected to DB");
   })
   .catch(console.error);
-
 //  connecting app to main router at rout.js
 app.use("/", mainRouter);
+
+app.use(errorLogger); // enabling the error logger
+
+app.use(errors());
+
+app.use(errorHandler);
 
 //  checking what port is being used
 app.listen(PORT, () => {

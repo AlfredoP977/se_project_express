@@ -2,13 +2,19 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
-const { SOME_ERROR_CODE } = require("../utils/errors");
 
 // import secret key from config.js
 const { JWT_SECRET } = require("../utils/config");
 
+//import error func
+const {
+  BadRequestError,
+  NotFoundError,
+  ConflictError,
+} = require("../middlewares/error-handler");
+
 // update user
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   const { name, avatar } = req.body;
   const updateData = {};
   if (name !== undefined) updateData.name = name;
@@ -19,32 +25,27 @@ const updateUser = (req, res) => {
     { new: true, runValidators: true }
   )
     .orFail(() => {
-      const err = new Error("ItemIDNotFound");
-      err.statusCode = 404;
-      throw err;
+      return next(new NotFoundError("ItemIDNotFound"));
     })
     .then((item) => {
       res.status(200).send(item);
     })
     .catch((err) => {
-      SOME_ERROR_CODE(err, res);
+      next(err);
     });
 };
 
 // post user
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
 
   if (!name || !avatar || !email || !password) {
-    const err = "Missing required fields";
-    return SOME_ERROR_CODE(err, res);
+    return next(new BadRequestError("Missing required fields"));
   }
   return User.findOne({ email })
     .then((existingUser) => {
       if (existingUser) {
-        const err = new Error("Email already exists");
-        err.statusCode = 409;
-        throw err;
+        return next(new ConflictError("User with this email already exists"));
       }
       return bcrypt.hash(password, 10);
     })
@@ -61,15 +62,14 @@ const createUser = (req, res) => {
       res.status(201).send(userWithoutPassword);
     })
     .catch((err) => {
-      SOME_ERROR_CODE(err, res);
+      next(err);
     });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    const err = "missing email or password";
-    return SOME_ERROR_CODE(err, res);
+    return next(new BadRequestError("missing email or password"));
   }
 
   return User.findUserByCredentials(email, password)
@@ -82,16 +82,16 @@ const login = (req, res) => {
     })
     .catch((err) => {
       // authentication error
-      SOME_ERROR_CODE(err, res);
+      next(err);
     });
 };
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .orFail()
     .then((user) => res.status(200).send(user))
     .catch((err) => {
-      SOME_ERROR_CODE(err, res);
+      next(err);
     });
 };
 module.exports = { createUser, getCurrentUser, login, updateUser };

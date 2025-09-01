@@ -1,17 +1,21 @@
 const ClothingItems = require("../models/clothingItems");
-const { SOME_ERROR_CODE } = require("../utils/errors");
+//import error func
+const {
+  NotFoundError,
+  ForbiddenError,
+} = require("../middlewares/error-handler");
 
 // get Items
-const getItems = (req, res) => {
+const getItems = (req, res, next) => {
   ClothingItems.find({})
     .then((items) => res.status(200).send(items))
     .catch((err) => {
-      SOME_ERROR_CODE(err, res);
+      next(err);
     });
 };
 
 // post item
-const createItem = (req, res) => {
+const createItem = (req, res, next) => {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
   ClothingItems.create({ name, weather, imageUrl, owner })
@@ -19,65 +23,57 @@ const createItem = (req, res) => {
       res.status(201).send(item);
     })
     .catch((err) => {
-      SOME_ERROR_CODE(err, res);
+      next(err);
     });
 };
 
-const deleteItem = (req, res) => {
+const deleteItem = (req, res, next) => {
   ClothingItems.findById(req.params.itemId)
     .orFail(() => {
-      const error = new Error("ItemIDNotFound");
-      error.statusCode = 404;
-      throw error;
+      return next(new NotFoundError("ItemIDNotFound"));
     })
     .then((item) => {
       if (String(item.owner) !== req.user._id) {
-        const error = new Error("DeletedAnotherUserItem");
-        error.statusCode = 403;
-        throw error;
+        return next(new ForbiddenError("DeletedAnotherUserItem"));
       }
       return item.deleteOne().then(() => res.status(200).send(item));
     })
     .catch((err) => {
-      SOME_ERROR_CODE(err, res);
+      next(err);
     });
 };
 
-const likeItem = (req, res) => {
+const likeItem = (req, res, next) => {
   ClothingItems.findByIdAndUpdate(
     req.params.id,
     { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet
     { new: true }
   )
     .orFail(() => {
-      const err = new Error("ItemIDNotFound");
-      err.statusCode = 404;
-      throw err;
+      return next(new NotFoundError("ItemIDNotFound"));
     })
     .then((item) => {
       res.status(200).send(item);
     })
     .catch((err) => {
-      SOME_ERROR_CODE(err, res);
+      next(err);
     });
 };
 
-const dislikeItem = (req, res) => {
+const dislikeItem = (req, res, next) => {
   ClothingItems.findByIdAndUpdate(
     req.params.id,
     { $pull: { likes: req.user._id } }, // remove _id from the array
     { new: true }
   )
     .orFail(() => {
-      const error = new Error("Item ID Not Found");
-      error.statusCode = 404;
-      throw error;
+      return next(new NotFoundError("ItemIDNotFound"));
     })
     .then((item) => {
       res.status(200).send(item);
     })
     .catch((err) => {
-      SOME_ERROR_CODE(err, res);
+      next(err);
     });
 };
 
