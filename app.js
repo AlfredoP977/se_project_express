@@ -1,3 +1,5 @@
+//environmental variables
+require("dotenv").config();
 //  express is used for routing
 const express = require("express");
 //  programs for the database
