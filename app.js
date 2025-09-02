@@ -1,5 +1,3 @@
-//environmental variables
-require("dotenv").config();
 //  express is used for routing
 const express = require("express");
 //  programs for the database
@@ -22,6 +20,8 @@ const app = express();
 
 // Enable cross-origin resource sharing for client-server communication
 app.use(cors());
+//environmental variables
+require("dotenv").config();
 
 //  choosing default port out of 65,535
 const { PORT = 3001 } = process.env;
