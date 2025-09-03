@@ -1,7 +1,7 @@
 // uses router from express to connect files
 const router = require("express").Router();
 // pulls this code to connect to error from errors.js
-const { NOT_FOUND } = require("../utils/errors");
+const { NotFoundError } = require("../middlewares/error-handler");
 // connects to user router
 const userRouter = require("./users");
 // connects to item router
@@ -14,7 +14,7 @@ router.use("/items", clothingItemsRouter);
 
 // reports errors
 router.use((req, res) => {
-  res.status(NOT_FOUND).send({ message: "Router not found" });
+  return next(new NotFoundError("Router not found"));
 });
 
 module.exports = router;
