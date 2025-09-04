@@ -46,3 +46,19 @@ Postman: A tool used for testing API endpoints, verifying that requests return c
 ### Testing
 
 Before committing your code, make sure you edit the file `sprint.txt` in the root folder. The file `sprint.txt` should contain the number of the sprint you're currently working on. For ex. 12
+
+### project 15
+
+created a server on the google cloud. set up firewall settings and ssh auth key to use the server from my computer.  
+installed backend and front end to my cloud server.
+installed git,node.js, MongoDB, and git to server
+installed pm2 to have the server continuesly run.
+registered URLs wtwr.equalgrid.com www.wtwr.equalgrid.com api.wtwr.equalgrid.com used nginx
+encrypted data with SSL certificate using certbot
+used a new secret in .env file to inprove security.
+Set up server crash testing
+
+-Deployed domain name:
+wtwr.equalgrid.com www.wtwr.equalgrid.com api.wtwr.equalgrid.com
+-frontend GitHub repo:
+https://github.com/AlfredoP977/se_project_react-main
