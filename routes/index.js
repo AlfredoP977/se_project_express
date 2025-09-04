@@ -13,7 +13,7 @@ router.use("/users", auth, userRouter);
 router.use("/items", clothingItemsRouter);
 
 // reports errors
-router.use((req, res) => {
+router.use((req, res, next) => {
   return next(new NotFoundError("Router not found"));
 });
 
