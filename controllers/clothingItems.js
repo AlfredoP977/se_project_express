@@ -1,14 +1,16 @@
 const ClothingItems = require("../models/clothingItems");
-//import error func
-const { NotFoundError, ForbiddenError } = require("../middlewares/errors");
+//  import error func
+const {
+  NotFoundError,
+  ForbiddenError,
+  BadRequestError,
+} = require("../middlewares/errors/IndexErrors");
 
 // get Items
 const getItems = (req, res, next) => {
   ClothingItems.find({})
     .then((items) => res.status(200).send(items))
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 // post item
@@ -56,9 +58,7 @@ const likeItem = (req, res, next) => {
     .then((item) => {
       res.status(200).send(item);
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 const dislikeItem = (req, res, next) => {
@@ -73,9 +73,7 @@ const dislikeItem = (req, res, next) => {
     .then((item) => {
       res.status(200).send(item);
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports = {

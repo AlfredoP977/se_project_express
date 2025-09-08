@@ -4,24 +4,25 @@ const express = require("express");
 const mongoose = require("mongoose");
 //  not sure what this does "allow requests from the client to the server to be processed"
 const cors = require("cors");
+
+// celebrate
+const { errors } = require("celebrate");
 //  main hub to connect all routes
 const mainRouter = require("./routes");
 
 const { login, createUser } = require("./controllers/users");
-//validate
+// validate
 const {
   validateUserLogin,
   validateUserCreation,
-} = require("./middlewares/validation.js");
+} = require("./middlewares/validation");
 
-//errorHandler
-const { errorHandler } = require("./middlewares/error-handler.js");
-
-const { errors } = require("celebrate");
+// errorHandler
+const { errorHandler } = require("./middlewares/errors/IndexErrors");
 
 const { requestLogger, errorLogger } = require("./middlewares/logger");
 
-//environmental variables
+// environmental variables
 require("dotenv").config();
 
 //  using express

@@ -6,7 +6,7 @@ const User = require("../models/user");
 // import secret key from config.js
 const { JWT_SECRET } = require("../utils/config");
 
-//import error func
+// import error func
 const {
   BadRequestError,
   NotFoundError,
@@ -100,8 +100,6 @@ const getCurrentUser = (req, res, next) => {
       return next(new NotFoundError("ItemIDNotFound"));
     })
     .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 module.exports = { createUser, getCurrentUser, login, updateUser };

@@ -9,7 +9,7 @@ const urlValidator = (value, helpers) => {
   return value;
 };
 
-//Clothing Item Creation
+// Clothing Item Creation
 const validateClothingItem = celebrate({
   body: Joi.object().keys({
     name: Joi.string()
@@ -32,7 +32,7 @@ const validateClothingItem = celebrate({
   }),
 });
 
-//User Creation
+// User Creation
 const validateUserCreation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).messages({
@@ -52,7 +52,7 @@ const validateUserCreation = celebrate({
   }),
 });
 
-//User Login
+// User Login
 const validateUserLogin = celebrate({
   body: Joi.object().keys({
     email: Joi.string().email().required(),
@@ -60,10 +60,10 @@ const validateUserLogin = celebrate({
   }),
 });
 
-//ID Validation (for params like /users/:id or /items/:id)
+// ID Validation (for params like /users/:id or /items/:id)
 const validateId = celebrate({
   params: Joi.object().keys({
-    id: Joi.string().hex().length(24).required(),
+    id: Joi.string().hex().max(24).required(),
   }),
 });
 

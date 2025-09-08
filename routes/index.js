@@ -1,7 +1,7 @@
 // uses router from express to connect files
 const router = require("express").Router();
 // pulls this code to connect to error from errors.js
-const { NotFoundError } = require("../middlewares/error-handler");
+const { NotFoundError } = require("../middlewares/errors/IndexErrors");
 // connects to user router
 const userRouter = require("./users");
 // connects to item router
