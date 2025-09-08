@@ -1,9 +1,6 @@
 const ClothingItems = require("../models/clothingItems");
 //import error func
-const {
-  NotFoundError,
-  ForbiddenError,
-} = require("../middlewares/error-handler");
+const { NotFoundError, ForbiddenError } = require("../middlewares/errors");
 
 // get Items
 const getItems = (req, res, next) => {
@@ -23,7 +20,11 @@ const createItem = (req, res, next) => {
       res.status(201).send(item);
     })
     .catch((err) => {
-      next(err);
+      if (err.name === "ValidationError") {
+        next(new BadRequestError("invalid data"));
+      } else {
+        next(err);
+      }
     });
 };
 

@@ -8,6 +8,12 @@ const cors = require("cors");
 const mainRouter = require("./routes");
 
 const { login, createUser } = require("./controllers/users");
+//validate
+const {
+  validateUserLogin,
+  validateUserCreation,
+} = require("./middlewares/validation.js");
+
 //errorHandler
 const { errorHandler } = require("./middlewares/error-handler.js");
 
@@ -15,13 +21,14 @@ const { errors } = require("celebrate");
 
 const { requestLogger, errorLogger } = require("./middlewares/logger");
 
+//environmental variables
+require("dotenv").config();
+
 //  using express
 const app = express();
 
 // Enable cross-origin resource sharing for client-server communication
 app.use(cors());
-//environmental variables
-require("dotenv").config();
 
 //  choosing default port out of 65,535
 const { PORT = 3001 } = process.env;
@@ -35,8 +42,8 @@ app.get("/crash-test", () => {
   }, 0);
 });
 
-app.post("/signin", login);
-app.post("/signup", createUser);
+app.post("/signin", validateUserLogin, login);
+app.post("/signup", validateUserCreation, createUser);
 
 //  utilizing authentification
 

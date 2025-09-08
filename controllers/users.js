@@ -11,7 +11,7 @@ const {
   BadRequestError,
   NotFoundError,
   ConflictError,
-} = require("../middlewares/error-handler");
+} = require("../middlewares/errors/IndexErrors");
 
 // update user
 const updateUser = (req, res, next) => {
@@ -31,7 +31,11 @@ const updateUser = (req, res, next) => {
       res.status(200).send(item);
     })
     .catch((err) => {
-      next(err);
+      if (err.name === "ValidationError") {
+        next(new BadRequestError("invalid data"));
+      } else {
+        next(err);
+      }
     });
 };
 
@@ -62,7 +66,11 @@ const createUser = (req, res, next) => {
       res.status(201).send(userWithoutPassword);
     })
     .catch((err) => {
-      next(err);
+      if (err.name === "ValidationError") {
+        next(new BadRequestError("invalid data"));
+      } else {
+        next(err);
+      }
     });
 };
 
@@ -88,7 +96,9 @@ const login = (req, res, next) => {
 
 const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail()
+    .orFail(() => {
+      return next(new NotFoundError("ItemIDNotFound"));
+    })
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       next(err);

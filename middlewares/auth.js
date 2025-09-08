@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 // Pulls in your secret key used to verify that the token was signed
 const { JWT_SECRET } = require("../utils/config");
 
-const { UnauthorizedError } = require("./error-handler");
+const { UnauthorizedError } = require("./errors/IndexErrors");
 
 //errors here are failing
 module.exports = (req, res, next) => {
