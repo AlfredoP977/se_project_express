@@ -24,9 +24,7 @@ const updateUser = (req, res, next) => {
     { $set: updateData },
     { new: true, runValidators: true }
   )
-    .orFail(() => {
-      return next(new NotFoundError("ItemIDNotFound"));
-    })
+    .orFail(() => next(new NotFoundError("ItemIDNotFound")))
     .then((item) => {
       res.status(200).send(item);
     })
@@ -62,7 +60,7 @@ const createUser = (req, res, next) => {
       })
     )
     .then((user) => {
-      const { password: _, ...userWithoutPassword } = user.toObject();
+      const { password: _password, ...userWithoutPassword } = user.toObject();
       res.status(201).send(userWithoutPassword);
     })
     .catch((err) => {
@@ -96,9 +94,7 @@ const login = (req, res, next) => {
 
 const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(() => {
-      return next(new NotFoundError("ItemIDNotFound"));
-    })
+    .orFail(() => next(new NotFoundError("ItemIDNotFound")))
     .then((user) => res.status(200).send(user))
     .catch(next);
 };

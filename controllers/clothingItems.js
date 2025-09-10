@@ -32,9 +32,7 @@ const createItem = (req, res, next) => {
 
 const deleteItem = (req, res, next) => {
   ClothingItems.findById(req.params.itemId)
-    .orFail(() => {
-      return next(new NotFoundError("ItemIDNotFound"));
-    })
+    .orFail(() => next(new NotFoundError("ItemIDNotFound")))
     .then((item) => {
       if (String(item.owner) !== req.user._id) {
         return next(new ForbiddenError("DeletedAnotherUserItem"));
@@ -52,9 +50,7 @@ const likeItem = (req, res, next) => {
     { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet
     { new: true }
   )
-    .orFail(() => {
-      return next(new NotFoundError("ItemIDNotFound"));
-    })
+    .orFail(() => next(new NotFoundError("ItemIDNotFound")))
     .then((item) => {
       res.status(200).send(item);
     })
@@ -67,12 +63,8 @@ const dislikeItem = (req, res, next) => {
     { $pull: { likes: req.user._id } }, // remove _id from the array
     { new: true }
   )
-    .orFail(() => {
-      return next(new NotFoundError("ItemIDNotFound"));
-    })
-    .then((item) => {
-      res.status(200).send(item);
-    })
+    .orFail(() => next(new NotFoundError("ItemIDNotFound")))
+    .then((item) => res.status(200).send(item))
     .catch(next);
 };
 

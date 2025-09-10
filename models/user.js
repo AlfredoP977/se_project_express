@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
-const UnauthorizedError = require("../middlewares/errors/IndexErrors");
+const { UnauthorizedError } = require("../middlewares/errors/IndexErrors");
 
 // model for users includes name, avatar,email,password to add to data base
 const userSchema = new mongoose.Schema({

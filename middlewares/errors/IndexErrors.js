@@ -5,7 +5,7 @@ const NotFoundError = require("./NotFoundError");
 const ConflictError = require("./ConflictError");
 
 // Error-handling middleware
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res) => {
   const { statusCode = 500, message = "Internal Server Error" } = err;
   res.status(statusCode).json({ message });
 };

@@ -51,7 +51,23 @@ const validateUserCreation = celebrate({
     password: Joi.string().required(),
   }),
 });
-
+// Update user
+const validateUpdateUser = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30).messages({
+      "string.min": 'The minimum length of the "name" field is 2',
+      "string.max": 'The maximum length of the "name" field is 30',
+      "string.empty": 'The "name" field must be filled in',
+    }),
+    avatar: Joi.string()
+      .custom(urlValidator)
+      .messages({
+        "string.empty": 'The "imageUrl" field must be filled in',
+        "string.uri": 'the "imageUrl" field must be a valid url',
+      })
+      .required(),
+  }),
+});
 // User Login
 const validateUserLogin = celebrate({
   body: Joi.object().keys({
@@ -67,7 +83,15 @@ const validateId = celebrate({
   }),
 });
 
+const validateItemId = celebrate({
+  params: Joi.object().keys({
+    itemId: Joi.string().hex().max(24).required(),
+  }),
+});
+
 module.exports = {
+  validateUpdateUser,
+  validateItemId,
   validateClothingItem,
   validateUserCreation,
   validateUserLogin,

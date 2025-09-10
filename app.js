@@ -1,3 +1,5 @@
+// environmental variables
+require("dotenv").config();
 //  express is used for routing
 const express = require("express");
 //  programs for the database
@@ -21,9 +23,6 @@ const {
 const { errorHandler } = require("./middlewares/errors/IndexErrors");
 
 const { requestLogger, errorLogger } = require("./middlewares/logger");
-
-// environmental variables
-require("dotenv").config();
 
 //  using express
 const app = express();
